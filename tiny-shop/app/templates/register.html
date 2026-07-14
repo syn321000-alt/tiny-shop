@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>회원가입</h2>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form class="stacked" method="post" action="/register">
+        <input type="hidden" name="csrf_token" value="{{ request.cookies.get('csrf_token', '') }}">
+        <label>아이디 (영문/숫자/_ 3~20자)</label>
+        <input type="text" name="username" required maxlength="20">
+        <label>비밀번호 (8자 이상)</label>
+        <input type="password" name="password" required minlength="8">
+        <div style="margin-top:16px"><button type="submit">가입하기</button></div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Tiny Second-hand Shopping{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="brand">Tiny Shop</a>
+        <div class="nav-links">
+            <a href="/">홈</a>
+            <a href="/chat/global">전체채팅</a>
+            {% if user %}
+                <a href="/product/new">상품등록</a>
+                <a href="/transfer">송금</a>
+                <a href="/mypage">마이페이지({{ user.username }})</a>
+                {% if user.is_admin %}<a href="/admin">관리자</a>{% endif %}
+                <form action="/logout" method="post" style="display:inline">
+                    <button type="submit">로그아웃</button>
+                </form>
+            {% else %}
+                <a href="/login">로그인</a>
+                <a href="/register">회원가입</a>
+            {% endif %}
+        </div>
+    </nav>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

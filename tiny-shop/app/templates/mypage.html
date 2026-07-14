@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>마이페이지</h2>
+    <p>아이디: {{ user.username }}</p>
+    <p>잔액: {{ "{:,.0f}".format(user.balance) }}원</p>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form class="stacked" method="post" action="/mypage">
+        <input type="hidden" name="csrf_token" value="{{ request.cookies.get('csrf_token', '') }}">
+        <label>소개글</label>
+        <textarea name="bio" rows="3" maxlength="500">{{ user.bio }}</textarea>
+        <label>새 비밀번호 (변경 시에만 입력, 8자 이상)</label>
+        <input type="password" name="new_password" minlength="8">
+        <div style="margin-top:16px"><button type="submit">저장</button></div>
+    </form>
+</div>
+{% endblock %}

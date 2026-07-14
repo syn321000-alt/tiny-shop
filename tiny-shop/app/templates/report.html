@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>신고하기</h2>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form class="stacked" method="post" action="/report">
+        <input type="hidden" name="csrf_token" value="{{ request.cookies.get('csrf_token', '') }}">
+        <input type="hidden" name="target_type" value="{{ target_type }}">
+        <input type="hidden" name="target_id" value="{{ target_id }}">
+        <label>신고 사유</label>
+        <textarea name="reason" rows="4" maxlength="300" required></textarea>
+        <div style="margin-top:16px"><button type="submit">신고 제출</button></div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <form method="get" action="/">
+        <input type="text" name="q" value="{{ q }}" placeholder="상품 검색..." style="width:70%;padding:8px;">
+        <button type="submit">검색</button>
+    </form>
+</div>
+
+<div class="product-list">
+    {% for p in products %}
+    <a class="card" href="/product/{{ p.id }}" style="text-decoration:none;color:inherit;display:block;">
+        <strong>{{ p.title }}</strong>
+        <div>{{ "{:,.0f}".format(p.price) }}원</div>
+    </a>
+    {% else %}
+    <div class="card">등록된 상품이 없습니다.</div>
+    {% endfor %}
+</div>
+{% endblock %}

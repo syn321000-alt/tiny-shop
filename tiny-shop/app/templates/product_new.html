@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>상품 등록</h2>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form class="stacked" method="post" action="/product/new">
+        <input type="hidden" name="csrf_token" value="{{ request.cookies.get('csrf_token', '') }}">
+        <label>상품명</label>
+        <input type="text" name="title" required maxlength="100">
+        <label>설명</label>
+        <textarea name="description" rows="4" maxlength="2000"></textarea>
+        <label>가격 (원)</label>
+        <input type="number" name="price" required min="0" step="1">
+        <div style="margin-top:16px"><button type="submit">등록</button></div>
+    </form>
+</div>
+{% endblock %}

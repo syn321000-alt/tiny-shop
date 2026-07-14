@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>{{ product.title }}</h2>
+    <p>{{ product.description }}</p>
+    <p><strong>{{ "{:,.0f}".format(product.price) }}원</strong></p>
+    <p>판매자: {{ product.seller.username }}</p>
+
+    {% if user %}
+        {% if is_owner %}
+        <form method="post" action="/product/{{ product.id }}/delete" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+            <input type="hidden" name="csrf_token" value="{{ request.cookies.get('csrf_token', '') }}">
+            <button type="submit" style="background:#dc2626;">삭제</button>
+        </form>
+        {% else %}
+        <a href="/chat/dm/{{ product.seller_id }}"><button type="button">판매자와 채팅</button></a>
+        <a href="/report?target_type=product&target_id={{ product.id }}"><button type="button" style="background:#6b7280;">신고</button></a>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

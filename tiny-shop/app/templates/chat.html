@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>{% if peer %}{{ peer.username }}님과의 채팅{% else %}전체 채팅{% endif %}</h2>
+    <div class="chat-box" id="chat-box">
+        {% for m in history %}
+        <div class="chat-msg" data-sender="{{ m.sender_id }}" data-content="{{ m.content }}"></div>
+        {% endfor %}
+    </div>
+    <div style="display:flex;gap:8px;">
+        <input type="text" id="msg-input" style="flex:1;padding:8px;" maxlength="1000" placeholder="메시지 입력...">
+        <button id="send-btn">전송</button>
+    </div>
+</div>
+
+<script>
+// 서버에서 넘어온 값은 textContent로만 넣어서 XSS(스크립트 삽입)를 방지한다.
+// innerHTML에 사용자 입력을 직접 꽂아 넣지 않는 것이 핵심.
+document.querySelectorAll('.chat-msg').forEach(function (el) {
+    el.textContent = el.dataset.sender + ': ' + el.dataset.content;
+});
+
+const roomId = {{ room_id | tojson }};
+const box = document.getElementById('chat-box');
+box.scrollTop = box.scrollHeight;
+
+const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+const ws = new WebSocket(protocol + '://' + window.location.host + '/ws/chat/' + roomId);
+
+ws.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+    const div = document.createElement('div');
+    div.className = 'chat-msg';
+    div.textContent = data.sender + ': ' + data.content; // textContent만 사용 (innerHTML 금지)
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+};
+
+document.getElementById('send-btn').onclick = function () {
+    const input = document.getElementById('msg-input');
+    const content = input.value.trim();
+    if (!content) return;
+    ws.send(JSON.stringify({content: content}));
+    input.value = '';
+};
+document.getElementById('msg-input').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') document.getElementById('send-btn').click();
+});
+</script>
+{% endblock %}
